@@ -8,8 +8,10 @@ $( document ).ready(function() {
     var startTimer = null;
     var optionSelected = false;
 
-
+// event listener to for highscore button where it will clear the main display and then 
+// display the highscores in the highscore array
     $('.highscore').on('click',function() {
+        clearInterval(startTimer);
         $('#display').empty();
         $('#display').append("<div class=\"highscore-display\"> <h2>Highscores</h2> </div>");
 
@@ -27,9 +29,10 @@ $( document ).ready(function() {
         $('.highscore-display').append(homeButton)
         $('.container').attr('style','background:gray')
         $('.home').on('click', function() {
-            $('#display').empty();
-            $('#display').attr("style","text-align:center")
-            $('#display').append(startUp)
+            // $('#display').empty();
+            // $('#display').attr("style","text-align:center")
+            // $('#display').append(startUp)
+            window.location.reload();
         });
     })
     
@@ -60,19 +63,19 @@ $( document ).ready(function() {
         randomizeQuestions();
         displayQuestion();
         startTimer = setInterval(function() {
-            $('#timer').text(`Timer: ${timer}`)
-            timer--;}
-            , 1000); 
+        timer--;
+        $('#timer').text(`Timer: ${timer}`)
         if (timer < 1) {
-            timeOut()
-            clearInterval(startTimer)
-        }
+            timeOut();
+            clearInterval(startTimer);
+        }}, 1000); 
+        
         })
         
         var randomizeQuestions = function() {
             //set timer and questionNumber
             questionNumber = 0;
-            timer = 5;
+            timer = 50;
             //randomize the questions
             for (let i = 0; i < theOfficeQuiz.length; i++) {
                 let random = Math.random();
@@ -132,7 +135,7 @@ $( document ).ready(function() {
         $('#next-question').on('click', function() {
             questionNumber++;
             console.log(questionNumber);
-            if (questionNumber < 3) {
+            if (questionNumber < 10) {
                 displayQuestion();
             } else {
                 endGame();
@@ -161,7 +164,8 @@ let timeOut = function() {
     $('#display').empty();
     $('#display').append(`
     <h1> TIME'S UP!<h1>
-    <h1> GAME OVER<h1>
+    <h1> GAME OVER</h1>
+    <button class="rounded" id="startquiz">TRY AGAIN!</button>
     `)
 }
 
@@ -172,7 +176,7 @@ let stopTimer = function() {
 let homeButton = 
 `<br>
 <div>
-    <button class="home">
+    <button class="home rounded">
         Back to Home
     </button>
 </div>
@@ -244,8 +248,8 @@ let theOfficeQuiz = [
     },
     {
     questions: "What song was Dwight playing the recorder after he broke up with Angela?",
-    options: ["Greensleeves", "Shot through the Heart", "Every Breath you Take", "You Give Love a Bad Name"],
-    answer: "Shot through the Heart",
+    options: ["Greensleeves", "You Give Love a Bad Name", "Every Breath you Take", "Never Gonna You Up"],
+    answer: "You Give Love a Bad Name",
     order: ""
     },
     {
