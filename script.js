@@ -1,16 +1,48 @@
 $( document ).ready(function() {
     var highscore = JSON.parse(localStorage.getItem(highscore));
     if (highscore === null) {
-        highscore = ['', '', 'test', '', ''];
+        highscore = [
+            {
+                'name':'bob',
+                'score': '4'            
+            },
+            {
+                'name':'kelly',
+                'score': '101'            
+            },
+            {
+                'name':'ryan',
+                'score': '3'            
+            },
+            {
+                'name':'robert',
+                'score': '2'            
+            },
+            {
+                'name':'hannah',
+                'score': '1'            
+            },
+        ];
+        console.log(highscore)
+
+        highscore = highscore.sort(function(a, b) {
+            return b.score - a.score
+        });
+        console.log(highscore)
     }
     var questionNumber = 0;
     var timer = 50;
     var startTimer = null;
     var optionSelected = false;
+    var isHighscore = false;
 
 // event listener to for highscore button where it will clear the main display and then 
 // display the highscores in the highscore array
     $('.highscore').on('click',function() {
+        showHighscores();
+    })
+
+    let showHighscores = function() {
         clearInterval(startTimer);
         $('#display').empty();
         $('#display').append("<div class=\"highscore-display\"> <h2>Highscores</h2> </div>");
@@ -18,10 +50,11 @@ $( document ).ready(function() {
         for (var i = 0; i < highscore.length; i++) {
             var j = i+1
             var showHighscores = 
-            `<table class="center" style="width:50%">
+            `<table class="center" style="width:33%">
             <tr>
                 <th>#${j}</th>
-                <th id="first">${highscore[i]}</th> 
+                <th id="first">${highscore[i].name}</th> 
+                <th id="first">${highscore[i].score}</th> 
             </table>`
             $('.highscore-display').append(showHighscores)
         }
@@ -34,7 +67,7 @@ $( document ).ready(function() {
             // $('#display').append(startUp)
             window.location.reload();
         });
-    })
+    }
     
     
     var reset = function() {
@@ -66,6 +99,7 @@ $( document ).ready(function() {
         timer--;
         $('#timer').text(`Timer: ${timer}`)
         if (timer < 1) {
+            $('#timer').attr('style','color:red;')
             timeOut();
             clearInterval(startTimer);
         }}, 1000); 
@@ -75,7 +109,7 @@ $( document ).ready(function() {
         var randomizeQuestions = function() {
             //set timer and questionNumber
             questionNumber = 0;
-            timer = 50;
+            timer = 5;
             //randomize the questions
             for (let i = 0; i < theOfficeQuiz.length; i++) {
                 let random = Math.random();
@@ -83,7 +117,9 @@ $( document ).ready(function() {
             }
             console.log(theOfficeQuiz);
             // sorting the questions based on random number
-            theOfficeQuiz = theOfficeQuiz.sort(function(a, b){return a.order - b.order});
+            theOfficeQuiz = theOfficeQuiz.sort(function(a, b) {
+                return a.order - b.order
+            });
         }
         //function for starting the game
         //it should display the question and options. 
@@ -135,7 +171,7 @@ $( document ).ready(function() {
         $('#next-question').on('click', function() {
             questionNumber++;
             console.log(questionNumber);
-            if (questionNumber < 10) {
+            if (questionNumber < 3) {
                 displayQuestion();
             } else {
                 endGame();
@@ -150,24 +186,70 @@ $( document ).ready(function() {
     let endGame = function() {
         $('#display').empty();
         clearInterval(startTimer)
-        $('#display').append(`Your score is ${timer}!`)
+        $('#display').append(`
+        <h1>DONE!</h1>
+        Your score is ${timer}!`)
+        // check if score is higher than any of the entries in the array 
+        // if it is higher than top 5 ask for Initials 
+        for (let i = 0; i < highscore.length; i++) {
+            if (isHighscore === false) {
+                if (timer > highscore[i].score) {
+                    isHighscore = true;
+                    let newHighscore = prompt('Congratulations! You have a highscore! Add 3 letters for initials.');
+                    highscore.push(
+                        {
+                            'name':newHighscore,
+                            'score':timer
+                        }
+                    );
+                }
+            }
+        }
+        // sort the highscores again. 
+        highscore = highscore.sort(function(a, b) {
+            return b.score - a.score
+        });
+        localStorage.setItem('highscores', JSON.stringify(highscore))
+        // if score was a high score show high school button to admire prowess, if not show home button
+        if (isHighscore) {
+            $('#display').append(highscoreBtn)
+            $('.highscore').on('click', () => showHighscores())
+            console.log(highscore)
+        } else {
+            $('#display').append(homeButton)
+        }
+
+
+
+
     }
 
+
+    let timeOut = function() {
+        $('#display').empty();
+        $('#display').append(`
+        <h1> TIME'S UP!<h1>
+        <h1> GAME OVER</h1>
+        <button class="home rounded">GO BACK HOME</button>
+        `)
+        $('.home').on('click', function() {
+            // $('#display').empty();
+            // $('#display').attr("style","text-align:center")
+            // $('#display').append(startUp)
+            window.location.reload();
+        });
+        
+    }
 
 
 })
 
-// let startTimer = setInterval(() => {
-//     timer--
-// }, 1000);
-let timeOut = function() {
-    $('#display').empty();
-    $('#display').append(`
-    <h1> TIME'S UP!<h1>
-    <h1> GAME OVER</h1>
-    <button class="rounded" id="startquiz">TRY AGAIN!</button>
-    `)
-}
+let highscoreBtn = 
+    `
+    <br>
+    <br>
+    <button class="highscore rounded">GO TO HIGHSCORES</button>
+    `;
 
 let stopTimer = function() {
     clearInterval(startTimer)
