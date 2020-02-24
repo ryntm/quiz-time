@@ -82,7 +82,7 @@ $( document ).ready(function() {
             
     reset();
             
-    
+            
     $('#startquiz').on('click', function() {
         randomizeQuestions();
         displayQuestion();
@@ -111,12 +111,8 @@ $( document ).ready(function() {
                 return a.order - b.order
             });
         }
-        //function for starting the game
-        //it should display the question and options. 
         
-        // loop that will go go through that object that all the questions. 
         // it should display one question at a time. then once an option is submitted, 
-        
         let displayQuestion = function() {
             $('#display').empty();
             optionSelected = false;
@@ -138,18 +134,18 @@ $( document ).ready(function() {
                 optionSelected = true;
             });
             $('#submitBtn').on('click', function() {
-                // if option selected's data-option is the same of the data-answer of the button that was clicked, then show "correct!" 
-                // also add that 10 to timer 
+                // checking to see if an option is selected, if not, send alert. 
                 if (optionSelected === false) {
                     alert('Please select an answer')
-                return
-            }
-            $('#submitBtn').remove();
-            if (document.getElementById(theOfficeQuiz[questionNumber].answer).checked === true) {
-                // if correct, give more time and show that answer was correct. 
-                timer += 10;
-                $('#singleQuestion').append(nextQuestion)
-                $('#singleQuestion').append(correct)
+                    return
+                }
+                $('#submitBtn').remove();
+                if (document.getElementById(theOfficeQuiz[questionNumber].answer).checked === true) {
+                    // if correct, give more time and show that answer was correct. 
+                    // if option selected's data-option is the same of the data-answer of the button that was clicked, then show "correct!" 
+            timer += 10;
+            $('#singleQuestion').append(nextQuestion)
+            $('#singleQuestion').append(correct)
             } else {
                 //penalty for wrong answer and show answer
                 timer -= 5;
@@ -162,8 +158,9 @@ $( document ).ready(function() {
         $('#next-question').on('click', function() {
             questionNumber++;
             if (questionNumber < 10) {
+                // end game/quiz once they have gone through 10 questions.
                 displayQuestion();
-                // gifs pf michael scott as distractions. 
+                // setting the background to gifs of the office characters as distractions. 
                 let characterArray = ["michael scott", "dwight schrute", "jim halpert", "kevin malone",
                  "kelly kapoor", "pam halpert", "angela martin", "andrew bernard", "stanley hudson"];
                 let officeCharacter = characterArray[Math.floor(Math.random() * 9)];
@@ -198,7 +195,7 @@ $( document ).ready(function() {
                 }
             }
         }
-        // if score was a high score show high school button to admire prowess, if not show home button
+        // if score was a high score show highcore button to admire prowess, if not show home button
         if (isHighscore) {
             let newHighscoreName = prompt('Congratulations! You got a highscore! Add your name to go the highscores.');
             let newHighscoreInfo = 
@@ -230,9 +227,6 @@ $( document ).ready(function() {
         <button class="home rounded">GO BACK HOME</button>
         `)
         $('.home').on('click', function() {
-            // $('#display').empty();
-            // $('#display').attr("style","text-align:center")
-            // $('#display').append(startUp)
             window.location.reload();
         });
     }
