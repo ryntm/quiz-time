@@ -167,7 +167,7 @@ $( document ).ready(function() {
                 let characterArray = ["michael scott", "dwight schrute", "jim halpert", "kevin malone",
                  "kelly kapoor", "pam halpert", "angela martin", "andrew bernard", "stanley hudson"];
                 let officeCharacter = characterArray[Math.floor(Math.random() * 9)];
-                fetch(`https://api.giphy.com/v1/gifs/search?q=${officeCharacter}&api_key=dc6zaTOxFJmzC&limit=25"`)
+                fetch(`https://api.giphy.com/v1/gifs/search?q=${officeCharacter}&api_key=CYTnnrinoJOLTaSgZGzrsVBsuLwFpXMB&limit=25"`)
                 .then((response) => {
                     return response.json()
                 }).then((json) => {
