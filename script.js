@@ -1,40 +1,35 @@
 $( document ).ready(function() {
-    var highscore = JSON.parse(localStorage.getItem(highscore));
-    if (highscore === null) {
-        highscore = [
+    // getting localstorage highscore if its exists, if it doesn't make blank array
+    let highscores = JSON.parse(localStorage.getItem("highscores"||[]));
+    if (highscores === null) {
+        highscores = [
             {
-                'name':'bob',
-                'score': '4'            
+                'name':'',
+                'score': ''            
             },
             {
-                'name':'kelly',
-                'score': '101'            
+                'name':'',
+                'score': ''            
             },
             {
-                'name':'ryan',
-                'score': '3'            
+                'name':'',
+                'score': ''            
             },
             {
-                'name':'robert',
-                'score': '2'            
+                'name':'',
+                'score': ''            
             },
             {
-                'name':'hannah',
-                'score': '1'            
+                'name':'',
+                'score': ''            
             },
         ];
-        console.log(highscore)
-
-        highscore = highscore.sort(function(a, b) {
-            return b.score - a.score
-        });
-        console.log(highscore)
     }
-    var questionNumber = 0;
-    var timer = 50;
-    var startTimer = null;
-    var optionSelected = false;
-    var isHighscore = false;
+    let questionNumber = 0;
+    let timer = 50;
+    let startTimer = null;
+    let optionSelected = false;
+    let isHighscore = false;
 
 // event listener to for highscore button where it will clear the main display and then 
 // display the highscores in the highscore array
@@ -47,14 +42,14 @@ $( document ).ready(function() {
         $('#display').empty();
         $('#display').append("<div class=\"highscore-display\"> <h2>Highscores</h2> </div>");
 
-        for (var i = 0; i < highscore.length; i++) {
-            var j = i+1
-            var showHighscores = 
-            `<table class="center" style="width:33%">
+        for (let i = 0; i < 5; i++) {
+            let j = i+1
+            let showHighscores = 
+            `<table class="center" style="width:100%">
             <tr>
                 <th>#${j}</th>
-                <th id="first">${highscore[i].name}</th> 
-                <th id="first">${highscore[i].score}</th> 
+                <th id="first">${highscores[i].name}</th> 
+                <th id="first">${highscores[i].score}</th> 
             </table>`
             $('.highscore-display').append(showHighscores)
         }
@@ -62,22 +57,18 @@ $( document ).ready(function() {
         $('.highscore-display').append(homeButton)
         $('.container').attr('style','background:gray')
         $('.home').on('click', function() {
-            // $('#display').empty();
-            // $('#display').attr("style","text-align:center")
-            // $('#display').append(startUp)
             window.location.reload();
         });
     }
     
-    
-    var reset = function() {
+    let reset = function() {
         $('#display').empty();
         $('#display').attr("style","text-align:center")
         $('#display').append(startUp)
     }
 
     
-    var startUp = 
+    let startUp = 
         `
         <h1>
             Welcome to the Office quiz?
@@ -106,16 +97,15 @@ $( document ).ready(function() {
         
         })
         
-        var randomizeQuestions = function() {
+        let randomizeQuestions = function() {
             //set timer and questionNumber
             questionNumber = 0;
-            timer = 5;
+            timer = 50;
             //randomize the questions
             for (let i = 0; i < theOfficeQuiz.length; i++) {
                 let random = Math.random();
                 theOfficeQuiz[i].order = random;
             }
-            console.log(theOfficeQuiz);
             // sorting the questions based on random number
             theOfficeQuiz = theOfficeQuiz.sort(function(a, b) {
                 return a.order - b.order
@@ -156,6 +146,7 @@ $( document ).ready(function() {
             }
             $('#submitBtn').remove();
             if (document.getElementById(theOfficeQuiz[questionNumber].answer).checked === true) {
+                // if correct, give more time and show that answer was correct. 
                 timer += 10;
                 $('#singleQuestion').append(nextQuestion)
                 $('#singleQuestion').append(correct)
@@ -167,18 +158,27 @@ $( document ).ready(function() {
                 $('#singleQuestion').append(`Answer: ${theOfficeQuiz[questionNumber].answer}`)
             }
             let x = document.getElementById(theOfficeQuiz[questionNumber].answer).checked
-            console.log(x)
+
         $('#next-question').on('click', function() {
             questionNumber++;
-            console.log(questionNumber);
-            if (questionNumber < 3) {
+            if (questionNumber < 10) {
                 displayQuestion();
+                // gifs pf michael scott as distractions. 
+                let characterArray = ["michael scott", "dwight schrute", "jim halpert", "kevin malone",
+                 "kelly kapoor", "pam halpert", "angela martin", "andrew bernard", "stanley hudson"];
+                let officeCharacter = characterArray[Math.floor(Math.random() * 9)];
+                fetch(`https://api.giphy.com/v1/gifs/search?q=${officeCharacter}&api_key=dc6zaTOxFJmzC&limit=25"`)
+                .then((response) => {
+                    return response.json()
+                }).then((json) => {
+                    let randomNum = Math.floor(Math.random() * 25);
+                    let gifURL = json.data[randomNum].images.original.url
+                    $('body').attr('style', `background-image:url('${gifURL}'); background-repeat:repeat;`)
+                })
             } else {
                 endGame();
-                // stopTimer();
             }
         })
-
         });
     }
 
@@ -187,43 +187,40 @@ $( document ).ready(function() {
         $('#display').empty();
         clearInterval(startTimer)
         $('#display').append(`
-        <h1>DONE!</h1>
+        <h1>QUIZ COMPLETE</h1>
         Your score is ${timer}!`)
         // check if score is higher than any of the entries in the array 
         // if it is higher than top 5 ask for Initials 
-        for (let i = 0; i < highscore.length; i++) {
+        for (let i = 0; i < 4; i++) {
             if (isHighscore === false) {
-                if (timer > highscore[i].score) {
+                if (timer > highscores[i].score) {
                     isHighscore = true;
-                    let newHighscore = prompt('Congratulations! You have a highscore! Add 3 letters for initials.');
-                    highscore.push(
-                        {
-                            'name':newHighscore,
-                            'score':timer
-                        }
-                    );
                 }
             }
         }
-        // sort the highscores again. 
-        highscore = highscore.sort(function(a, b) {
-            return b.score - a.score
-        });
-        localStorage.setItem('highscores', JSON.stringify(highscore))
         // if score was a high score show high school button to admire prowess, if not show home button
         if (isHighscore) {
+            let newHighscoreName = prompt('Congratulations! You got a highscore! Add your name to go the highscores.');
+            let newHighscoreInfo = 
+                {
+                    'name': newHighscoreName,
+                    'score': timer
+                }
+            highscores.push(newHighscoreInfo);
+            // sort the highscores again. 
+            highscores = highscores.sort(function(a, b) {
+                return b.score - a.score
+            });
+            localStorage.setItem('highscores', JSON.stringify(highscores))
             $('#display').append(highscoreBtn)
             $('.highscore').on('click', () => showHighscores())
-            console.log(highscore)
         } else {
             $('#display').append(homeButton)
+            $('.home').on('click', () => {
+                window.location.reload();
+            });
         }
-
-
-
-
     }
-
 
     let timeOut = function() {
         $('#display').empty();
@@ -238,10 +235,7 @@ $( document ).ready(function() {
             // $('#display').append(startUp)
             window.location.reload();
         });
-        
     }
-
-
 })
 
 let highscoreBtn = 
@@ -273,7 +267,6 @@ let incorrect =
     `
     <p id="incorrect">WRONG!</p>
     `
-
 let nextQuestion = 
     `
     <button class="rounded" id="next-question">NEXT>></button>

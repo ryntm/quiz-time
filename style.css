@@ -11,3 +11,104 @@
     float: right;
     margin: auto 0;
 }
+
+body {
+    margin: 10px;
+}
+
+header {
+    height: 75px;
+    vertical-align: middle;
+}
+
+.container {
+    min-width: 400px;
+    width: 50%;
+    padding: 25px;
+    background: white;
+    opacity: 90%;
+}
+
+#highscore {
+    width:100px;
+    height: 50px;
+    padding: 10px;
+    margin: auto 0;
+    display: inline-block;
+
+}
+
+#timer {
+    padding: 10px;
+    background-color: white;
+}
+
+.highscore {
+    width: 200px;
+    height: 50px;
+    background: white;
+    /* padding: 10px; */
+    display: inline-block;
+
+}
+
+.home {
+    width: 200px;
+    height: 50px;
+    background: white;
+    padding: 10px;
+    text-align: center;
+}
+
+table.center {
+margin-left:auto; 
+margin-right:auto;
+}
+
+th {
+    width: 100px;
+}
+
+
+.highscore-display {
+    color:white;
+    font-weight: 500;
+    /* box-sizing:content-box; */
+    text-align: center;
+}
+
+#display {
+    padding: 25px;
+}
+
+#singleQuestion {
+    text-align: left;
+}
+
+#correct {
+    color: green;
+}
+
+#incorrect {
+    color: red;
+}
+
+#next-question {
+    width: 150px;
+    height: 50px;
+    background: rgb(16, 0, 241);
+    padding: 10px;
+    text-align: center;
+    margin: 5px 0 0 0;
+    color: white
+}
+
+#submitBtn {
+    width: 150px;
+    height: 50px;
+    background: rgb(16, 0, 241);
+    padding: 10px;
+    text-align: center;
+    margin: 5px 0 0 0;
+    color: white
+}
